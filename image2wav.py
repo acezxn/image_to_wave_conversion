@@ -49,66 +49,95 @@ def convert2arr(file):
 
     return array, dim
 
-def devide(arr, dir): # recursive formula to chain 2D data with the Hilbert's curve
-    x = len(arr[0])
-    y = len(arr)
 
+def FlipForwardSlash(arr):
+    out = [[0]*len(arr) for i in range(len(arr))]
+    for y in range(len(arr)):
+        for x in range(len(arr[y])):
+            out[x][y] = arr[len(arr[y])-1-y][x]
+    
+    tmp = FlipBackSlash(out)
+    for y in range(len(arr)):
+        for x in range(len(arr[y])):
+            out[len(arr[y])-1-y][x] = tmp[x][y]
 
-    if x % 2 == 0 and y % 2 == 0:
-        LU_block = arr[0:((y//2))]
-        o = []
-        for e in LU_block:
-            o.append(e[0:((x//2))])
-        LU = devide(o, 'LU')
+    return out
 
-        RU_block = arr[0:((y//2))]
-        o2 = []
-        for e in RU_block:
-            o2.append(e[((x//2)):x])
-        RU = devide(o2, 'RU')
+def FlipBackSlash(arr):
+    out = [[0]*len(arr) for i in range(len(arr))]
+    for y in range(len(arr)):
+        for x in range(len(arr[y])):
+            out[x][y] = arr[y][x]
+    
+    return out
 
-        LD_block = arr[((y//2)):y]
-        o3 = []
-        for e in LD_block:
-            o3.append(e[0:((x//2))])
-        LD = devide(o3, 'LD')
+def crop(arr, xMin, xMax, yMin, yMax):
+    out = [[0]*int(xMax - xMin + 1) for i in range(int(yMax - yMin + 1))]
+    for y in range(int(yMax-yMin+1)):
+        for x in range(int(xMax - xMin+1)):
+            out[y][x] = arr[int(yMin+y)][int(xMin+x)];
+    
+    return out;
 
-        RD_block = arr[((y//2)):y]
-        o4 = []
-        for e in RD_block:
-            o4.append(e[((x//2)):x])
-        RD = devide(o4, 'RD')
+def Two2OneD(arr):
+    # print(arr)
+    if (len(arr) >= 2):
+        out = [0]*(len(arr[0])*len(arr))
+        xStart = 0;
+        xEnd = len(arr[0])-1;
+        yStart = 0;
+        yEnd = len(arr)-1;
+        xMid = (xStart + xEnd) // 2;
+        yMid = (yStart + yEnd) // 2;
 
-        if dir == 'LU' or dir == 'RU':
-            connection = LD+LU+RU+RD
-        elif dir == 'LD':
-            connection = LD+RD+RU+LU
-        elif dir == 'RD':
-            connection = RU+LU+LD+RD
-        else:
-            connection = LD+LU+RU+RD
+        # create four new nodes with each node have four sub-nodes connected in the order: left down -> left up -> right up -> right down
+        LD_Piece = Two2OneD(crop(FlipForwardSlash(arr), xStart, xMid, yMid+1, yEnd));
+        LU_Piece = Two2OneD(crop(arr, xStart, xMid, yStart, yMid));
+        RU_Piece = Two2OneD(crop(arr, xMid+1, xEnd, yStart, yMid));
+        RD_Piece = Two2OneD(crop(FlipBackSlash(arr), xMid+1, xEnd, yMid+1, yEnd));
 
+        # concatenate the four pieces of array
+        idx = 0;
+        for i in LD_Piece:
+            out[idx] = i;
+            idx += 1
+        for i in LU_Piece:
+            out[idx] = i;
+            idx += 1
+        for i in RU_Piece:
+            out[idx] = i;
+            idx += 1
+        for i in RD_Piece:
+            out[idx] = i;
+            idx += 1
 
-
-        return connection
-
-
-
+        # print(out)
+        return out;
     else:
-        return arr
+        return [arr[0][0]];
+
 
 if __name__ == '__main__':
 
     arr, dim = convert2arr(sys.argv[1])
     print("Linking pixels... ")
 
-    map = devide(arr, 'w')
-    chain = [element for sublist in map for element in sublist] # flatten list
-    print(chain)
-    print(len(chain))
+    
+    # dimensions = 4
+    # arr = [[0]*dimensions for i in range(dimensions)]
+
+    c = 0;
+    print("Original array")
+    print(arr)
+
+    map = Two2OneD(arr)
+    print("New array")
+    print(map)
+
     print("creating wav... ")
-    createwav.append_sinewave(volume=1, freq=chain)
+    createwav.append_sinewave(volume=1, freq=map)
+    print("saving wav... ")
     createwav.save()
-    playsound('output.wav')
+    # playsound('output.wav')
 
     pass

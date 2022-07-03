@@ -3,6 +3,7 @@
 import math
 import wave
 import struct
+from tqdm import tqdm
 
 # Audio will contain a long list of samples (i.e. floating point numbers describing the
 # waveform).  If you were working with a very long sound you'd want to stream this to
@@ -21,9 +22,9 @@ def append_sinewave(
     num_freqs = len(freq)
     num_samples = duration_milliseconds * (sample_rate / 1000.0)
 
-    freq_range = [130, 4186]
+    freq_range = [0, 12628]
     step = (freq_range[1]-freq_range[0]) / (num_freqs-1)
-    for x in range(int(num_samples)):
+    for x in tqdm(range(int(num_samples))):
         current = freq_range[0]
         sum = 0
 
