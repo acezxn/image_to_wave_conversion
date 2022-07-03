@@ -13,7 +13,7 @@ After the 1D array is created, the project creates wave data with frequencies ba
 
 ![image](https://github.com/acezxn/image_to_wave_conversion/blob/main/pictures/B.jpg)
 ##### Original picture
-![image](https://github.com/acezxn/image_to_wave_conversion/blob/main/audios/B.mp4)
+https://github.com/acezxn/image_to_wave_conversion/blob/main/audios/B.mp4
 ##### Converted sound
 
 ### sound to image
