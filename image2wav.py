@@ -1,4 +1,4 @@
-import itertools
+import argparse
 from PIL import Image
 import numpy as np
 import createwav
@@ -9,21 +9,12 @@ import matplotlib.pyplot as plt
 #import pyaudio
 
 
-arr = [
-[1, 2, 3, 4],
-[11, 12, 13, 14],
-[21, 22, 23, 24],
-[31, 32, 33, 34]
-]
-
-audio = []
-
 def convert2arr(file):
-    img = Image.open(file)
+    print(f"Opening file {file}")
+    img = Image.open(file).convert('RGB')
     dim = img.size[0]
     print(dim, img.size[1])
     img = img.crop((0, 0, dim, dim))
-    img.convert("L")
 
     data = img.getdata()
     idx = 0
@@ -119,7 +110,11 @@ def Two2OneD(arr):
 
 if __name__ == '__main__':
 
-    arr, dim = convert2arr(sys.argv[1])
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', help='image', dest="image")
+    args = parser.parse_args()
+
+    arr, dim = convert2arr(args.image)
     print("Linking pixels... ")
 
     
