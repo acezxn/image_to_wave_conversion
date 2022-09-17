@@ -11,7 +11,8 @@ The project converts an image into 2D arrays, and convert the 2D array to 1D by 
 
 After the 1D array is created, the project creates wave data with frequencies based on the data in the 1D array, the wave data then would be added together and exported as .wav file
 
-![image](https://github.com/acezxn/image_to_wave_conversion/blob/main/pictures/B.jpg)
+<img src=https://github.com/acezxn/image_to_wave_conversion/blob/main/pictures/B.jpg width=300>
+
 ##### Original picture
 
 
@@ -25,5 +26,7 @@ The project performs fft on the wave data to get the frequency amplitude data of
 
 ![image](https://github.com/acezxn/image_to_wave_conversion/blob/main/images/fft.png)
 ##### FFT result
-![image](https://github.com/acezxn/image_to_wave_conversion/blob/main/images/convertedB.png)
+
+<img src=https://github.com/acezxn/image_to_wave_conversion/blob/main/images/convertedB.png width=300>
+
 ##### Converted image
